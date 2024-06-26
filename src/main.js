@@ -2,6 +2,7 @@ import './assets/main.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { useImageStore } from '@/stores/imageStore.js';
 
 
 
@@ -14,6 +15,8 @@ app.use(createPinia())
 app.use(router);
 
 
+const imageStore = useImageStore();
+imageStore.loadCartLocalStorage();
 
 app.mount('#app');
 

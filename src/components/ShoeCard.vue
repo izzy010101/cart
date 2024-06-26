@@ -5,6 +5,7 @@ import { ref, computed } from "vue";
 
 const imageStore= useImageStore();
 
+
 const mainImageDisplay = computed(() => {
   return imageStore.mainImage;
 })
@@ -23,8 +24,12 @@ const hideOverlay = (index) => {
   imageStore.hideOverlay(index);
 }
 
+const sneakerPrice =  computed(() => {
+  return imageStore.price;
+})
 
-const sneakerQuantity = computed(() => imageStore.quantity);
+
+
 const increment = () => {
    imageStore.incrementQuantity();
 }
@@ -33,16 +38,13 @@ const decrement = () => {
   imageStore.decrementQuantity();
 }
 
-const sneakerPrice =  computed(() => {
-  return imageStore.price;
-})
+const sneakerQuantity = computed(() => imageStore.quantity);
+
   const addToCart = (quantity, price) => {
     imageStore.addToCart();
   };
 
-const sneakerCart = computed(() => {
-  return imageStore.cart;
-})
+
 
 </script>
 <template>
@@ -92,7 +94,7 @@ const sneakerCart = computed(() => {
           <div class="font-bold px-4 py-4">{{ sneakerQuantity }}</div>
           <div class="cursor-pointer text-[#ff7d19] font-bold py-4 px-4 text-2xl" @click="increment()">+</div>
         </div>
-      <button class="addToCart bg-[#ff7d19] text-black font-bolder px-16 rounded-xl text-xl flex items-center justify-center gap-2" @click="addToCart">
+      <button class="addToCart bg-[#ff7d19] text-black font-bolder px-16 rounded-xl text-xl flex items-center justify-center gap-2 md:flex-col" @click="addToCart">
         <img src="/src/assets/icons/cart_icon.png" alt="cart_icon" class="w-[20px]  h-[20px]">
         <span>Add To Cart</span>
       </button>

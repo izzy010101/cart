@@ -17,6 +17,11 @@ export let useImageStore = defineStore('imageStore', {
         ],
 
     }),
+    getters: {
+        isCartEmpty: (state) => {
+            return state.cart.length === 0;
+        }
+    },
 
     actions: {
         updateMainImage(newImage) {
@@ -48,26 +53,42 @@ export let useImageStore = defineStore('imageStore', {
         // add to cart click and pass the data to cart array
         addToCart (){
             if (this.quantity > 0){
-               Swal.fire({
-                 position: "center",
-                 icon: "warning",
-                 title: `${this.quantity} sneaker(s) added to cart!`,
-                 showConfirmButton: false,
-                 timer: 2000
-               });
-               this.cart.push({
-                 name: 'Fall Limited Edition Sneakers',
-                 price: this.price,
-                 quantity: this.quantity,
-                 subtotal: this.quantity * this.price,
-                 image: this.mainImage,
 
-               });
+                const existingSneaker = this.cart.find(item => item.name === "Fall Limited Edition Sneakers")
+                if (existingSneaker) {
+                    existingSneaker.quantity += this.quantity;
+                    existingSneaker.subtotal = existingSneaker.quantity * this.price;
+                    existingSneaker.image = this.mainImage;
 
-                this.quantity = 0;
+                    Swal.fire({
+                        position: "center",
+                        icon: "warning",
+                        title: `${this.quantity} sneaker(s) added to cart!`,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+
+                } else {
+                    this.cart.push({
+                        name: 'Fall Limited Edition Sneakers',
+                        price: this.price,
+                        quantity: this.quantity,
+                        subtotal: this.quantity * this.price,
+                        image: this.mainImage,
+
+                    });
+                    Swal.fire({
+                        position: "center",
+                        icon: "warning",
+                        title: `${this.quantity} sneaker(s) added to cart!`,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+
+                }
 
                 this.cartToLocalStorage();
-                setTimeout(() => window.location.reload(), 1500);
+
             } else {
                 Swal.fire({
                     position: "center",
@@ -78,6 +99,15 @@ export let useImageStore = defineStore('imageStore', {
                 });
             }
           },
+
+            removeFromCart(item) {
+                const index = this.cart.findIndex(cartItem => cartItem.name === item.name);
+                if (index !== -1) {
+                    this.cart.splice(index, 1);
+                    this.cartToLocalStorage();
+                }
+            },
+
 
             cartToLocalStorage() {
                 localStorage.setItem('cart', JSON.stringify(this.cart));
@@ -91,12 +121,18 @@ export let useImageStore = defineStore('imageStore', {
                 }
             },
 
+            clearCart() {
+                this.cart = [];
+                this.cartToLocalStorage();
+            },
+
             isLocalStorageEmpty() {
                 return localStorage.length === 0;
             },
 
             removeStorageItem(key){
                 localStorage.removeItem(key);
+                this.clearCart();
                 window.location.reload();
             },
 

@@ -1,11 +1,15 @@
 <script setup>
 import { useImageStore } from '@/stores/imageStore.js';
+import { computed, watch } from "vue";
 
 const imageStore = useImageStore();
 
-const cart =  imageStore.cart;
+const cart = computed(() => imageStore.cart);
 
-const cartEmpty = imageStore.isLocalStorageEmpty();
+// Watch for changes in the cart to update the local storage and UI
+watch(cart, (newCart) => {
+  imageStore.cartToLocalStorage();
+}, { deep: true });
 
 </script>
 
@@ -31,9 +35,9 @@ const cartEmpty = imageStore.isLocalStorageEmpty();
           <div class="hidden md:block">
             <div class="ml-6 flex items-center md:ml-6">
 
-                <a
-                    v-if="cartEmpty"
-                    href="/cart"
+                <router-link
+                    v-if="cart.length === 0"
+                    to="/cart"
                     class="relative rounded-full p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
                 >
 
@@ -42,11 +46,11 @@ const cartEmpty = imageStore.isLocalStorageEmpty();
                             src="@/assets/icons/cart_icon.png"
                             alt="cart_icon">
 
-                </a>
+                </router-link>
 
-                <a
+                <router-link
                   v-else
-                  href="/cart"
+                  to="/cart"
                   class="relative rounded-full p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
                 >
 
@@ -56,7 +60,7 @@ const cartEmpty = imageStore.isLocalStorageEmpty();
                           alt="cart_icon">
                       <span class="red_dot"></span>
 
-                </a>
+                </router-link>
 
 
 
@@ -80,11 +84,11 @@ const cartEmpty = imageStore.isLocalStorageEmpty();
       <!-- Mobile menu, show/hide based on menu state. -->
       <div class="md:hidden flex flex-col " id="mobile-menu">
         <div class="px-2 pb-3 pt-2 sm:px-3 flex ">
-          <a href="/" class="block rounded-md px-2 py-2 text-base font-small font-bold text-gray-700 hover:text-[#d96a1f]">Collections</a>
-          <a href="#" class="block rounded-md px-2 py-2 text-base font-small font-bold text-gray-700 hover:text-[#d96a1f]">Men</a>
-          <a href="#" class="block rounded-md px-2 py-2 text-base font-small font-bold text-gray-700 hover:text-[#d96a1f]">Women</a>
-          <a href="#" class="block rounded-md px-2 py-2 text-base font-small font-bold text-gray-700 hover:text-[#d96a1f]">About</a>
-          <a href="#" class="block rounded-md px-2 py-2 text-base font-small font-bold text-gray-700 hover:text-[#d96a1f]">Contact</a>
+          <router-link to="/" class="block rounded-md px-2 py-2 text-base font-small font-bold text-gray-700 hover:text-[#d96a1f]">Collections</router-link>
+          <router-link to="#" class="block rounded-md px-2 py-2 text-base font-small font-bold text-gray-700 hover:text-[#d96a1f]">Men</router-link>
+          <router-link to="#" class="block rounded-md px-2 py-2 text-base font-small font-bold text-gray-700 hover:text-[#d96a1f]">Women</router-link>
+          <router-link to="#" class="block rounded-md px-2 py-2 text-base font-small font-bold text-gray-700 hover:text-[#d96a1f]">About</router-link>
+          <router-link to="#" class="block rounded-md px-2 py-2 text-base font-small font-bold text-gray-700 hover:text-[#d96a1f]">Contact</router-link>
         </div>
         <div class=" pb-3 pt-4">
           <div class="flex items-center px-5">
@@ -95,18 +99,18 @@ const cartEmpty = imageStore.isLocalStorageEmpty();
               <div class="text-base font-medium leading-none text-white">Tom Cook</div>
               <div class="text-sm font-medium leading-none text-gray-400">tom@example.com</div>
             </div>
-            <a
-                v-if="cartEmpty"
-                href="/cart"
+            <router-link
+                v-if="cart.length === 0"
+                to="/cart"
                 class="relative ml-auto flex-shrink-0 rounded-full  p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2">
               <img
                   class="h-[25px]"
                   src="@/assets/icons/cart_icon.png"
                   alt="cart_icon">
-            </a>
-            <a
+            </router-link>
+            <router-link
                 v-else
-                href="/cart"
+                to="/cart"
                 class="relative rounded-full p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
             >
 
@@ -116,7 +120,7 @@ const cartEmpty = imageStore.isLocalStorageEmpty();
                   alt="cart_icon">
               <span class="red_dot"></span>
 
-            </a>
+            </router-link>
 
           </div>
         </div>
