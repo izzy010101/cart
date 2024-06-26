@@ -1,12 +1,12 @@
 {
   "name": "baseline_vue",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build", ,
-    "preview": "vite preview --base=/cart/",
+    "build": "vite build",
+    "preview": "vite preview --base=/https://izzy010101.github.io/cart/",
     "deploy": "vite build && gh-pages -d dist",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
